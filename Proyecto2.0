@@ -1,0 +1,40 @@
+
+int main() {
+	ifstream archEnt;
+	ofstream archSal;
+	string NombreEnt, NombreSal;
+	//nombrar y abrir archivos de entrada y salida respectivamente
+	cout << "Nombre de archivo de entrada" << endl;
+	cin >> NombreEnt;
+	cout << "Nombre archivo de salida" << endl;
+	cin >> NombreSal;
+	archEnt.open(NombreEnt.c_str());
+	archSal.open(NombreSal.c_str());
+
+	char tabla[14];
+	string num1, num2, op, num1Deco, num2Deco, opDeco;
+	int respuesta;
+
+	if (archEnt.is_open()) {
+		//sacar la tabla de codificacion
+		for (int i = 0; i < 14; i++) {
+			archEnt >> tabla[i];
+		}
+		cout << tabla << endl;
+		//Sacar cada problema partido en tres para despues decodificarlos y mandar a hacer la operacion, terminando con escribir los datos a el arcivo de salida
+		while (archEnt >> num1 >> op >> num2) {
+			num1Deco = decodeNum(tabla, num1);
+			num2Deco = decodeNum(tabla, num2);
+			opDeco = decodeOp(tabla, op);
+
+			respuesta = operacion(opDeco, num1Deco, num2Deco);
+			cout << respuesta << endl;
+
+			archSal << "(" << num1Deco << ")" << " " << opDeco << " " << "(" << num2Deco << ")" << " " << "= " << respuesta << endl;
+		}
+	}
+	//cerrar archivos
+	archEnt.close();
+	archSal.close();
+	return 0;
+}
